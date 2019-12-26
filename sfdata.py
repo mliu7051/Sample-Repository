@@ -3,22 +3,40 @@ import numpy as np
 import pandas as pd
 import math
 import seaborn as sns
+from sklearn.datasets import load_iris
+from sklearn import tree
+import collections
 from sklearn.ensemble import RandomForestRegressor as rfr
+from sklearn.tree import DecisionTreeRegressor as dtr
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LinearRegression as lr
 from sklearn.preprocessing import StandardScaler, Normalizer
 
 
-literature_data = pd.read_csv('Literature Data.csv')
+literature_data = pd.read_csv('Fake trend data.csv')
 # dropped add3, should add back when there are more third additives
-literature_data = literature_data.drop(columns=['add3wt', 'add2wt', 'Article', '1author', 'peowt', 'polymw', 'add1', 'add2', 'add3'])
-literature_data = literature_data.fillna(0)
 
-litfeat = literature_data.drop(columns=['conduct'])
-litprop = literature_data['conduct']
+literature_data = literature_data.drop(columns=['wt', 'conduct', 'Unnamed: 2', 'litfsiwt1', 'conduct1'])
+literature_data = literature_data.dropna()
+#literature_data = literature_data.iloc[0:14]
 
-X_train, X_test, y_train, y_test = train_test_split(litfeat, litprop, test_size=0.2, random_state=39)
+litfeat = literature_data.drop(columns = ['conduct2'])
+litprop = literature_data['conduct2']
+
+X_train, X_test, y_train, y_test = train_test_split(litfeat, litprop, test_size=0.4, random_state=23)
+
+
+
+
+dectree = dtr()
+dectree.fit(X_train,y_train)
+
+predictedy = dectree.predict(X_test)
+score = dectree.score(X_test, y_test)
+
+
+"""
 randomforestmodel = rfr()
 randomforestmodel.fit(X_train, y_train)
 
@@ -27,7 +45,6 @@ score = randomforestmodel.score(X_test, y_test)
 feat = randomforestmodel.feature_importances_
 
 
-"""
 normalizer = Normalizer().fit(litfeat)
 scaler = StandardScaler().fit(litfeat)
 
@@ -43,7 +60,7 @@ linreg.fit(X_train, y_train)
 predictedy = linreg.predict(X_test)
 coef = linreg.coef_
 intercept = linreg.intercept_
-"""
+score = linreg.score(X_test, y_test)
 
 
 
@@ -60,7 +77,6 @@ intercept = linreg.intercept_
 
 
 
-"""
 # import csv file later
 
 # dropping PEO, salt, thickness, and typesalt columns
