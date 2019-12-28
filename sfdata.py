@@ -14,21 +14,24 @@ from sklearn.linear_model import LinearRegression as lr
 from sklearn.preprocessing import StandardScaler, Normalizer
 
 
-literature_data = pd.read_csv('Fake trend data.csv')
-# dropped add3, should add back when there are more third additives
+literature_data = pd.read_csv('Experimental Data.csv')
 
-literature_data = literature_data.drop(columns=['wt', 'conduct', 'Unnamed: 2', 'litfsiwt1', 'conduct1'])
+testcomp = pd.read_csv('testing compositions.csv')
+testcomp = testcomp.drop(columns=['Unnamed: 1', 'Unnamed: 2'])
+
+literature_data = literature_data.drop(columns=['litfsiwt2', 'conduct2', 'conduct1', 'exponent2'])
 literature_data = literature_data.dropna()
 #literature_data = literature_data.iloc[0:14]
 
-litfeat = literature_data.drop(columns = ['conduct2'])
-litprop = literature_data['conduct2']
 
-X_train, X_test, y_train, y_test = train_test_split(litfeat, litprop, test_size=0.4, random_state=23)
+X_train = literature_data.drop(columns = ['exponent1'])
+y_train = literature_data['exponent1']
+
+#X_train, X_test, y_train, y_test = train_test_split(litfeat, litprop, test_size=0.2, random_state=23)
 
 
 
-
+"""
 dectree = dtr()
 dectree.fit(X_train,y_train)
 
@@ -40,11 +43,14 @@ score = dectree.score(X_test, y_test)
 randomforestmodel = rfr()
 randomforestmodel.fit(X_train, y_train)
 
-predictedy = randomforestmodel.predict(X_test)
-score = randomforestmodel.score(X_test, y_test)
-feat = randomforestmodel.feature_importances_
+#predictedy = randomforestmodel.predict(X_train)
+#score = randomforestmodel.score(X_train, y_train)
+#feat = randomforestmodel.feature_importances_
 
 
+predictions = randomforestmodel.predict(testcomp)
+
+"""
 normalizer = Normalizer().fit(litfeat)
 scaler = StandardScaler().fit(litfeat)
 
