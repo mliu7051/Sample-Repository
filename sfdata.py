@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import math
 import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn import tree
 import collections
@@ -14,21 +15,62 @@ from sklearn.linear_model import LinearRegression as lr
 from sklearn.preprocessing import StandardScaler, Normalizer
 
 
-literature_data = pd.read_csv('Experimental Data.csv')
 
-testcomp = pd.read_csv('testing compositions.csv')
-testcomp = testcomp.drop(columns=['Unnamed: 1', 'Unnamed: 2'])
+"""
+literature_data = pd.read_csv('all data.csv')
 
-literature_data = literature_data.drop(columns=['litfsiwt2', 'conduct2', 'conduct1', 'exponent2'])
+literature_data = literature_data.drop(columns=['1author', 'LiTFSIwt2', 'temp2', 'exponent2', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'Unnamed: 13'])
+literature_data = literature_data.dropna()
+
+litfeat = literature_data.drop(columns = ['exponent'])
+litprop = literature_data['exponent']
+X_train, X_test, y_train, y_test = train_test_split(litfeat, litprop, test_size=0.2, random_state=23)
+
+linreg = lr(normalize=True)
+linreg.fit(X_train, y_train)
+predictedy = linreg.predict(X_test)
+coef = linreg.coef_
+intercept = linreg.intercept_
+score = linreg.score(X_test, y_test)
+
+
+dectree = dtr()
+dectree.fit(X_train,y_train)
+
+predictedy = dectree.predict(X_test)
+score = dectree.score(X_test, y_test)
+
+
+
+randomforestmodel = rfr()
+randomforestmodel.fit(X_train, y_train)
+
+predictedy = randomforestmodel.predict(X_test)
+score = randomforestmodel.score(X_test, y_test)
+
+residuals = y_test-predictedy
+sns.distplot(residuals, bins=20)
+plt.show()
+
+#------------------------------------------------------------------------------------------------
+
+"""
+literature_data = pd.read_csv('all data.csv')
+
+testvalues = pd.read_csv('predicted results.csv')
+#testvalues = testvalues.drop(columns=['Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7'])
+
+literature_data = literature_data.drop(columns=['1author', 'LiTFSIwt2', 'temp2', 'exponent2', 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Unnamed: 12', 'Unnamed: 13'])
 literature_data = literature_data.dropna()
 #literature_data = literature_data.iloc[0:14]
 
 
-X_train = literature_data.drop(columns = ['exponent1'])
-y_train = literature_data['exponent1']
+#litfeat = literature_data.drop(columns = ['exponent2'])
+#litprop = literature_data['exponent2']
 
 #X_train, X_test, y_train, y_test = train_test_split(litfeat, litprop, test_size=0.2, random_state=23)
-
+X_train = literature_data.drop(columns = ['exponent'])
+y_train = literature_data['exponent']
 
 
 """
@@ -39,16 +81,21 @@ predictedy = dectree.predict(X_test)
 score = dectree.score(X_test, y_test)
 
 
+#predictions = dectree.predict(testcomp)
+
 """
 randomforestmodel = rfr()
 randomforestmodel.fit(X_train, y_train)
 
-#predictedy = randomforestmodel.predict(X_train)
-#score = randomforestmodel.score(X_train, y_train)
+#predictedy = randomforestmodel.predict(X_test)
+#score = randomforestmodel.score(X_test, y_test)
 #feat = randomforestmodel.feature_importances_
 
+predictions = randomforestmodel.predict(testvalues)
 
-predictions = randomforestmodel.predict(testcomp)
+#residuals = y_test-predictedy
+#sns.distplot(residuals, bins=20)
+#plt.show()
 
 """
 normalizer = Normalizer().fit(litfeat)
