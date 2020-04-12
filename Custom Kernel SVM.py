@@ -14,15 +14,21 @@ from sklearn.metrics import mean_squared_error
         
 
 literature_data = pd.read_csv('Feed In Data.csv')
-literature_data = literature_data.drop(columns=['1author'])
+#without experiments
+#literature_data = literature_data.drop(columns=['1author2', '1author3', 'LiTFSIwt3', 'temp C3', 'exponent3', 'Unnamed: 4', 'LiTFSIwt', 'temp C', 'exponent', 'Unnamed: 9', '1author'])
+
+#with experiments
+#literature_data = literature_data.drop(columns=['1author2', '1author3', 'LiTFSIwt3', 'temp C3', 'exponent3', 'Unnamed: 4', 'LiTFSIwt2', 'temp C2', 'exponent2', 'Unnamed: 9', '1author'])
+
+#without experiments, less data
+literature_data = literature_data.drop(columns=['1author3', '1author2', 'LiTFSIwt2', 'temp C2', 'exponent2', 'Unnamed: 4', 'LiTFSIwt', 'temp C', 'exponent', 'Unnamed: 9', '1author'])
 literature_data = literature_data.dropna()
 
-X = literature_data.drop(columns = ['exponent'])
-#X = literature_data.drop(columns = ['exponent', 'LiTFSIwt'])
-y = literature_data['exponent']
+X = literature_data.drop(columns = ['exponent3'])
+y = literature_data['exponent3']
 
 # Train-Test Split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=23)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=3)
 
 # Random Forest Regression
 randomforestmodel = rfr()
@@ -38,6 +44,13 @@ print('rf RMSE: ' + str(np.sqrt(rf_rmse)))
 def arrhenius_kernel(X, Y):
     #return np.dot(np.exp((-1)/(X)), Y.T)
     return np.dot(X, Y.T)
+
+"""
+def arrhenius_kernel(X, Y):
+    
+"""
+
+print(randomforestmodel.feature_importances_)
 
 # Support Vector Regression
 svr = svm.SVR(kernel = arrhenius_kernel)
